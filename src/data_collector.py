@@ -4,10 +4,19 @@ import uuid
 from PIL import Image
 import requests
 from io import BytesIO
+import glob
+import numpy as np
+
+
+image_id_rotation_csv = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\data\\image_ids_and_rotation.csv'
+train_annotation_csv = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\data\\train-annotations-human-imagelabels.csv'
+validation_annotation_csv = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\data\\validation-annotations-human-imagelabels.csv'
+test_annotation_csv = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\data\\test-annotations-human-imagelabels.csv'
+class_desc_csv = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\data\\class-descriptions.csv'
 
 class DataCollector:
     
-
+    
     def load_datas(self, image_id_url_csv, train_annotation_csv, validation_annotation_csv, test_annotation_csv, class_desc_csv):
         self.image_id_url = pd.read_csv(image_id_url_csv,engine='python', sep = ',')
 
@@ -23,8 +32,8 @@ class DataCollector:
         label_id = self.class_description[self.class_description[1] == label_name][0]
         label_id = label_id.values[0]
         
-        labeled_df = self.image_labels.loc[(self.image_labels['LabelName'] == label_id) & (self.image_labels['Confidence'] == 1)]
-        merged_df = self.image_id_url.merge(labeled_df, on='ImageID', how='inner')
+        self.labeled_df = self.image_labels.loc[(self.image_labels['LabelName'] == label_id) & (self.image_labels['Confidence'] == 1)]
+        merged_df = self.image_id_url.merge(self.labeled_df, on='ImageID', how='inner')
         
         self.result_label_df = merged_df.loc[pd.notnull(merged_df['Thumbnail300KURL'])]
         return self.result_label_df
