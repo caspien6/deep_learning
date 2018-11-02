@@ -1,3 +1,5 @@
 *.tsv
 *.jpg
+*.hdf5
+*.pyc
 data/
