@@ -30,7 +30,7 @@ def create_onehot_vectors(node, nodes, onehot_list):
 
 class ImageLoader:
     
-    def __init__(self, folder, pt_in_hull_folder = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\data\\pts_in_hull.npy'):
+    def __init__(self, folder, pt_in_hull_folder = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\samples\\pts_in_hull.npy'):
         
         self.pts_in_hull = np.load(pt_in_hull_folder)
         self.image_list = []
