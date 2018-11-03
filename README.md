@@ -1,4 +1,5 @@
 # Grayscaled pictures colorisation
+## For the 2nd Milestone open training notebook!!
 
 Homework for the 2018 BME VIK Deep learning course.
 
@@ -7,3 +8,4 @@ There is a sample folder with all the files our program will use up.
 
 data_collector.py methods are collecting and forming the downloaded Google image set .csv-s.  
 image_loader.py loading up the downloaded images, separate datasets.
+
