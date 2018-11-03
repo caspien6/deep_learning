@@ -17,6 +17,7 @@ import warnings
 import keras
 from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
+import matplotlib.pyplot as plt
 
 
 # In[3]:
@@ -36,8 +37,9 @@ import image_loader
 import nnetwork
 
 #import image_loader
-image_folder = 'O:/ProgrammingSoftwares/anaconda_projects/dp_nagyhazi/samples/images/'
-img_loader = image_loader.ImageLoader(image_folder)
+image_folder = 'data/images/skyline/'
+pts_hull_file = '/userhome/student/kede/colorize/deep_learning/data/pts_in_hull.npy'
+img_loader = image_loader.ImageLoader(image_folder, pts_hull_file)
 
 # Separate_small_data(validation_rate, test_rate)
 img_loader.separate_small_data(0.1,0.1)
@@ -54,7 +56,7 @@ model.compile('adam', loss = 'categorical_crossentropy',
 # In[7]:
 
 
-patience=20
+patience=100
 early_stopping=EarlyStopping(patience=patience, verbose=1)
 checkpointer=ModelCheckpoint(filepath='weights.hdf5', save_best_only=True, verbose=1)
 
@@ -64,8 +66,8 @@ checkpointer=ModelCheckpoint(filepath='weights.hdf5', save_best_only=True, verbo
 
 history = model.fit(x=img_loader.X_train,
                     y=img_loader.Y_train,
-                    batch_size=32,
-                    epochs=2,
+                    batch_size=64,
+                    epochs=200,
                     validation_data=(img_loader.X_valid,img_loader.Y_valid),
                    callbacks=[checkpointer, early_stopping])
 
@@ -101,11 +103,11 @@ plt.show()
 
 # In[17]:
 
-
+'''
 from matplotlib.pyplot import imshow
 from skimage import color
 import matplotlib.pyplot as plt
-get_ipython().magic('matplotlib inline')
+#get_ipython().magic('matplotlib inline')
 
 idx = 10
 
@@ -116,14 +118,7 @@ img_loader.pts_in_hull # létező színosztályok
 lab_im = np.concatenate([img_loader.y_dataset[np.newaxis,idx,:,:,0, np.newaxis],y_real ], axis=3)
 rgb_im = color.lab2rgb(lab_im[0])
 plt.imshow(rgb_im)
+'''
 
 
-# In[ ]:
-
-
-import cv2
-import numpy as np
-
-res = cv2.resize(img_loader.X_train[0], dsize=(56, 56), interpolation=cv2.INTER_CUBIC)
-res = res.reshape((56,56,1))
 
