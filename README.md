@@ -1,5 +1,5 @@
 # Grayscaled pictures colorisation
-## For the 2nd Milestone open training notebook!!
+## For the 2nd Milestone open src/training notebook!!
 
 Homework for the 2018 BME VIK Deep learning course.
 
