@@ -34,11 +34,11 @@ class ImageLoader:
         
         self.pts_in_hull = np.load(pt_in_hull_folder)
         self.image_list = []
-        
         for filename in glob.glob(folder + '*.jpg'): #
             img= np.asarray(Image.open(filename))
             img = img.astype(float)
             self.image_list.append(img)
+        #print(len(image_list))
             
     def separate_small_data(self,valid_split, test_split, input_size = 224, output_size = 56):
         self.dataset = []
