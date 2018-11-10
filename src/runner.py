@@ -54,8 +54,6 @@ img_loader = image_loader.ImageLoader(image_root_folder, pts_hull_file)
 img_loader.separate_small_data(0.2,0.1)
 
 
-
-
 model = nnetwork.create_vgg_model()
 model.compile('adam', loss = 'categorical_crossentropy',
               metrics=['accuracy', keras.metrics.categorical_accuracy])
