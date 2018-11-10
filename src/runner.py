@@ -1,11 +1,3 @@
-
-# coding: utf-8
-
-# # 2nd milestone
-
-# In[6]:
-
-
 from keras import models
 from keras import layers
 from keras import optimizers
@@ -35,33 +27,42 @@ import glob
 import data_collector
 import image_loader
 import nnetwork
+from utility_methods import collect_and_separate_labels, collect_labels
 
 #import image_loader
-image_folder = 'data/images/skyline/'
+image_folder = 'data/images/'
 pts_hull_file = '/userhome/student/kede/colorize/deep_learning/data/pts_in_hull.npy'
-img_loader = image_loader.ImageLoader(image_folder, pts_hull_file)
+
+train_labl_path = '/userhome/student/kede/colorize/deep_learning/data/train_labels.csv'
+valid_labl_path = '/userhome/student/kede/colorize/deep_learning/data/valid_labels.csv'
+test_labl_path = '/userhome/student/kede/colorize/deep_learning/data/test_labels.csv'
+class_desc_path = '/userhome/student/kede/colorize/deep_learning/data/class_descriptions.csv'
+image_id_path = '/userhome/student/kede/colorize/deep_learning/data/image_ids_and_rotation.csv'
+
+
+data_hl = data_collector.DataCollector()
+data_hl.load_datas(image_id_path, train_labl_path, valid_labl_path, test_labl_path, class_desc_path)
+
+image_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/'
+label_names = ['City', 'Skyline', 'Cityscape', 'Boathouse', 'Landscape lighting', 'Town square', 'College town', 'Town']
+collect_labels(data_hl, image_root_folder, label_names)
+
+#img_loader = image_loader.ImageLoader(image_folder, pts_hull_file)
 
 # Separate_small_data(validation_rate, test_rate)
-img_loader.separate_small_data(0.1,0.1)
+#img_loader.separate_small_data(0.1,0.1)
 
 
-# In[4]:
 
-
+'''
 model = nnetwork.create_vgg_model()
 model.compile('adam', loss = 'categorical_crossentropy',
               metrics=['accuracy', keras.metrics.categorical_accuracy])
 
 
-# In[7]:
-
-
 patience=100
 early_stopping=EarlyStopping(patience=patience, verbose=1)
 checkpointer=ModelCheckpoint(filepath='weights.hdf5', save_best_only=True, verbose=1)
-
-
-# In[8]:
 
 
 history = model.fit(x=img_loader.X_train,
@@ -72,53 +73,10 @@ history = model.fit(x=img_loader.X_train,
                    callbacks=[checkpointer, early_stopping])
 
 
-# In[9]:
-
 
 score = model.evaluate(img_loader.X_test, img_loader.Y_test, verbose=1)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
 
-# In[12]:
-
-
-# summarize history for accuracy
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.show()
-# summarize history for loss
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('model loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(['train', 'test'], loc='upper left')
-plt.show()
-
-
-# In[17]:
-
 '''
-from matplotlib.pyplot import imshow
-from skimage import color
-import matplotlib.pyplot as plt
-#get_ipython().magic('matplotlib inline')
-
-idx = 10
-
-y_real = model.predict(img_loader.X_train[idx].reshape((1,224,224,3)))
-y_real = np.apply_along_axis(lambda x: img_loader.pts_in_hull[np.argmax(x)], axis=3, arr = y_real)
-img_loader.pts_in_hull # létező színosztályok
-
-lab_im = np.concatenate([img_loader.y_dataset[np.newaxis,idx,:,:,0, np.newaxis],y_real ], axis=3)
-rgb_im = color.lab2rgb(lab_im[0])
-plt.imshow(rgb_im)
-'''
-
-
-
