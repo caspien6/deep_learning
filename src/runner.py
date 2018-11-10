@@ -39,22 +39,23 @@ test_labl_path = '/userhome/student/kede/colorize/deep_learning/data/test_labels
 class_desc_path = '/userhome/student/kede/colorize/deep_learning/data/class_descriptions.csv'
 image_id_path = '/userhome/student/kede/colorize/deep_learning/data/image_ids_and_rotation.csv'
 
-
-data_hl = data_collector.DataCollector()
-data_hl.load_datas(image_id_path, train_labl_path, valid_labl_path, test_labl_path, class_desc_path)
-
 image_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/'
-label_names = ['City', 'Skyline', 'Cityscape', 'Boathouse', 'Landscape lighting', 'Town square', 'College town', 'Town']
-collect_labels(data_hl, image_root_folder, label_names)
 
-#img_loader = image_loader.ImageLoader(image_folder, pts_hull_file)
+#data_hl = data_collector.DataCollector()
+#data_hl.load_datas(image_id_path, train_labl_path, valid_labl_path, test_labl_path, class_desc_path)
+
+
+#label_names = ['City', 'Skyline', 'Cityscape', 'Boathouse', 'Landscape lighting', 'Town square', 'College town', 'Town']
+#collect_labels(data_hl, image_root_folder, label_names)
+
+img_loader = image_loader.ImageLoader(image_root_folder, pts_hull_file)
 
 # Separate_small_data(validation_rate, test_rate)
-#img_loader.separate_small_data(0.1,0.1)
+img_loader.separate_small_data(0.2,0.1)
 
 
 
-'''
+
 model = nnetwork.create_vgg_model()
 model.compile('adam', loss = 'categorical_crossentropy',
               metrics=['accuracy', keras.metrics.categorical_accuracy])
@@ -78,5 +79,19 @@ score = model.evaluate(img_loader.X_test, img_loader.Y_test, verbose=1)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-
-'''
+# summarize history for accuracy
+plt.plot(history.history['acc'])
+plt.plot(history.history['val_acc'])
+plt.title('model accuracy')
+plt.ylabel('accuracy')
+plt.xlabel('epoch')
+plt.legend(['train', 'valid'], loc='upper left')
+plt.show()
+# summarize history for loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+plt.title('model loss')
+plt.ylabel('loss')
+plt.xlabel('epoch')
+plt.legend(['train', 'valid'], loc='upper left')
+plt.show()

@@ -38,17 +38,18 @@ class ImageLoader:
             img= np.asarray(Image.open(filename))
             img = img.astype(float)
             self.image_list.append(img)
-        #print(len(image_list))
+        print('Length of image list: ',len(self.image_list))
             
     def separate_small_data(self,valid_split, test_split, input_size = 224, output_size = 56):
         self.dataset = []
         self.y_dataset = []
         for img_idx in range(len(self.image_list)):
-           
-            im = self.image_list[img_idx]            
+            im = self.image_list[img_idx]
             im = transform.resize( im , (224,224), preserve_range=True)
             im = im / 255.0
             #I'm needed the image in Lab color mode:
+            if im.shape != (224,224,3):
+                continue
             lab_im = color.rgb2lab(im)
             #lab_im.dtype = float64
             lab_im = transform.resize( lab_im , (input_size,input_size), preserve_range=True)
@@ -56,10 +57,13 @@ class ImageLoader:
             #print(lab_im)
             self.dataset.append(np.asarray(lab_im, dtype="float"))
             self.y_dataset.append(np.asarray(y_lab_im, dtype="float"))
-            
+
         #self.dataset = np.asarray(self.image_list, dtype="float32")
         self.dataset = np.array(self.dataset, dtype="float")
         self.y_dataset = np.array(self.y_dataset, dtype="float")
+
+        print('Gigabyte of dataset: ',float(self.dataset.nbytes)/ (1024**3) )
+        print('Gigabyte of y_dataset: ',float(self.y_dataset.nbytes)/ (1024**3) )
         
         X = np.concatenate([self.dataset[:,:,:,0, np.newaxis], self.dataset[:,:,:,0, np.newaxis], self.dataset[:,:,:,0, np.newaxis] ], axis = 3)
         #Normalize to 0...1 interval
