@@ -15,7 +15,6 @@ def create_vgg_model(vgg_trainable_layer_count = 2, upsampling = 8):
 
     # Add the vgg convolutional base model
     model.add(vgg_conv)
-    model.add(BatchNormalization())
 
     #conv8
     model.add(UpSampling2D(upsampling))
