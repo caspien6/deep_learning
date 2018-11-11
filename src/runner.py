@@ -10,9 +10,7 @@ import keras
 from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
 import matplotlib.pyplot as plt
-
-
-# In[3]:
+from utility_methods import save_plots
 
 
 import pandas as pd
@@ -79,19 +77,4 @@ score = model.evaluate(img_loader.X_test, img_loader.Y_test, verbose=1)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
-# summarize history for accuracy
-plt.plot(history.history['acc'])
-plt.plot(history.history['val_acc'])
-plt.title('model accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(['train', 'valid'], loc='upper left')
-plt.show()
-# summarize history for loss
-plt.plot(history.history['loss'])
-plt.plot(history.history['val_loss'])
-plt.title('model loss')
-plt.ylabel('loss')
-plt.xlabel('epoch')
-plt.legend(['train', 'valid'], loc='upper left')
-plt.show()
+save_plots(history)
