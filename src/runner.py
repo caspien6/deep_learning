@@ -7,10 +7,8 @@ import scipy as sp
 from skimage import color
 import warnings
 import keras
-from keras.callbacks import EarlyStopping
-from keras.callbacks import ModelCheckpoint
-import matplotlib.pyplot as plt
-from utility_methods import save_plots
+from keras.callbacks import EarlyStopping, LambdaCallback,ModelCheckpoint
+
 
 
 import pandas as pd
@@ -25,10 +23,9 @@ import glob
 import data_collector
 import image_loader
 import nnetwork
-from utility_methods import collect_and_separate_labels, collect_labels
+from utility_methods import collect_and_separate_labels, collect_labels,save_plots, save_plots_callback
 
-#import image_loader
-image_folder = 'data/images/'
+
 pts_hull_file = '/userhome/student/kede/colorize/deep_learning/data/pts_in_hull.npy'
 
 train_labl_path = '/userhome/student/kede/colorize/deep_learning/data/train_labels.csv'
@@ -52,20 +49,20 @@ img_loader = image_loader.ImageLoader(image_root_folder, pts_hull_file)
 img_loader.separate_small_data(0.2,0.1)
 
 
-model = nnetwork.create_vgg_model()
-model.compile('adam', loss = 'categorical_crossentropy',
-              metrics=['accuracy', keras.metrics.categorical_accuracy])
+model = nnetwork.create_vgg_model(3)
+model.compile('adam', loss = 'categorical_crossentropy', metrics=['accuracy', keras.metrics.categorical_accuracy])
 
 
-patience=100
-early_stopping=EarlyStopping(patience=patience, verbose=1)
-checkpointer=ModelCheckpoint(filepath='weights.hdf5', save_best_only=True, verbose=1)
-
+patience=70
+early_stopping=EarlyStopping(monitor='val_acc',patience=patience, verbose=1)
+checkpointer=ModelCheckpoint(filepath='weights.hdf5',monitor='val_acc', save_best_only=True, verbose=1)
+# Print the batch number at the beginning of every batch.
+#epoch_plot_saver = LambdaCallback(on_epoch_end=lambda epoch,logs: save_plots_callback(logs) if epoch % 10 == 0 else False)
 
 history = model.fit(x=img_loader.X_train,
                     y=img_loader.Y_train,
                     batch_size=64,
-                    epochs=200,
+                    epochs=100,
                     validation_data=(img_loader.X_valid,img_loader.Y_valid),
                    callbacks=[checkpointer, early_stopping])
 

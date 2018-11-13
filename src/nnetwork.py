@@ -1,5 +1,5 @@
 from keras.applications import VGG16
-from keras import models
+from keras import models, regularizers
 from keras.layers import BatchNormalization, Conv2D, UpSampling2D
 
 def create_vgg_model(vgg_trainable_layer_count = 2, upsampling = 8):
@@ -18,7 +18,7 @@ def create_vgg_model(vgg_trainable_layer_count = 2, upsampling = 8):
 
     #conv8
     model.add(UpSampling2D(upsampling))
-    #model.add(Conv2D(313,3,padding = 'same', activation = 'relu'))
+    model.add(Conv2D(313,3,padding = 'same',kernel_regularizer=regularizers.l2(0.0001), activation = 'relu'))
     model.add(Conv2D(313,1,padding = 'same', activation = 'softmax'))
     
     # Show a summary of the model. Check the number of trainable parameters

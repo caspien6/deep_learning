@@ -27,7 +27,7 @@ def save_plots(history):
     plt.title('model accuracy')
     plt.ylabel('accuracy')
     plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
+    plt.legend(['train', 'valid'], loc='upper left')
     plt.savefig('model_accuracy.png')
     plt.figure()
     # summarize history for loss
@@ -36,5 +36,25 @@ def save_plots(history):
     plt.title('model loss')
     plt.ylabel('loss')
     plt.xlabel('epoch')
-    plt.legend(['train', 'test'], loc='upper left')
+    plt.legend(['train', 'valid'], loc='upper left')
+    plt.savefig('model_loss.png')
+
+def save_plots_callback(logs):
+    # summarize history for accuracy
+    plt.figure()
+    plt.plot(logs['acc'])
+    plt.plot(logs['val_acc'])
+    plt.title('model accuracy')
+    plt.ylabel('accuracy')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'valid'], loc='upper left')
+    plt.savefig('model_accuracy.png')
+    plt.figure()
+    # summarize history for loss
+    plt.plot(logs['loss'])
+    plt.plot(logs['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['train', 'valid'], loc='upper left')
     plt.savefig('model_loss.png')
