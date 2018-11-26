@@ -1,4 +1,7 @@
 *.tsv
 *.hdf5
 *.pyc
+*.png
 data/
+src/augmented_images/
+src/.ipynb_checkpoints/

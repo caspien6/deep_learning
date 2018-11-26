@@ -42,33 +42,31 @@ image_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/'
 #label_names = ['City', 'Skyline', 'Cityscape', 'Boathouse', 'Landscape lighting', 'Town square', 'College town', 'Town']
 #collect_labels(data_hl, image_root_folder, label_names)
 
-img_loader = image_loader.ImageLoader(image_root_folder, pts_hull_file)
+img_streamer_train = StreamingDataGenerator(image_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64)
+img_streamer_valid = StreamingDataGenerator(image_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64)
+img_streamer_test = StreamingDataGenerator(image_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64)
 
-# Separate_small_data(validation_rate, test_rate)
-img_loader.separate_small_data(0.2,0.1)
-
-
-model = nnetwork.create_vgg_model(3)
+model = nnetwork.create_vgg_model(1)
 model.compile('adam', loss = 'categorical_crossentropy', metrics=['accuracy', keras.metrics.categorical_accuracy])
 
-
-patience=70
+patience=30
 early_stopping=EarlyStopping(monitor='val_acc',patience=patience, verbose=1)
 checkpointer=ModelCheckpoint(filepath='weights.hdf5',monitor='val_acc', save_best_only=True, verbose=1)
-# Print the batch number at the beginning of every batch.
-#epoch_plot_saver = LambdaCallback(on_epoch_end=lambda epoch,logs: save_plots_callback(logs) if epoch % 10 == 0 else False)
-csv_logger = CSVLogger('training.log', append=True)
 
-history = model.fit(x=img_loader.X_train,
-                    y=img_loader.Y_train,
-                    batch_size=64,
+csv_logger = CSVLogger('training1.log', append=True)
+
+history = model.fit_generator(generator=img_streamer_train,
+                    validation_data=img_streamer_valid,
                     epochs=100,
-                    validation_data=(img_loader.X_valid,img_loader.Y_valid),
-                   callbacks=[csv_logger,checkpointer, early_stopping])
+                   callbacks=[csv_logger,checkpointer, early_stopping],
+                   use_multiprocessing=True,
+                    workers=6)
 
 
 
-score = model.evaluate(img_loader.X_test, img_loader.Y_test, verbose=1)
+score = model.evaluate_generator(img_streamer_test, verbose=1,
+                    use_multiprocessing=True,
+                    workers=6)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
 
