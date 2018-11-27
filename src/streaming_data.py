@@ -31,7 +31,7 @@ def create_onehot_vectors(node, nodes, onehot_list):
 class StreamingDataGenerator(keras.utils.Sequence):
     
     def __init__(self, folder, batch_size=32,
-                 pt_in_hull_folder = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\samples\\pts_in_hull.npy'):
+                 pt_in_hull_folder = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\samples\\pts_in_hull.npy', just_test = False):
         
         'Initialization'
         self.batch_size = batch_size        
@@ -42,6 +42,8 @@ class StreamingDataGenerator(keras.utils.Sequence):
                 img= np.asarray(test_image)
                 img = img.astype(float)
                 self.image_list.append(img)
+            if just_test and len(self.image_list) > batch_size:
+                break
         print('Length of image list: ',len(self.image_list))
 
     def __len__(self):
@@ -62,6 +64,7 @@ class StreamingDataGenerator(keras.utils.Sequence):
         return X, y
     
     def __data_augmentation(self, list_images_temp):
+        gc.collect()
         'Returns augmented data with batch_size enzymes'
         input_size = 224
         output_size = 56
@@ -87,7 +90,7 @@ class StreamingDataGenerator(keras.utils.Sequence):
         #Normalize to 0...1 interval
         X = X / 100.0
         
-        onehot_encoder = OneHotEncoder(sparse = False)
+        onehot_encoder = OneHotEncoder(sparse = False, categories='auto')
         onehot_encoded = onehot_encoder.fit_transform(np.array(range(0,self.pts_in_hull.shape[0])).reshape(-1,1) )
 
         #res = np.zeros((y_dataset.shape[0], y_dataset.shape[1], y_dataset.shape[2], self.pts_in_hull.shape[0]))
