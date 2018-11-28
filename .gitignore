@@ -5,3 +5,4 @@
 data/
 src/augmented_images/
 src/.ipynb_checkpoints/
+tests/

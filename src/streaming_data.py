@@ -65,7 +65,7 @@ class StreamingDataGenerator(keras.utils.Sequence):
     
     def __data_augmentation(self, list_images_temp):
         gc.collect()
-        'Returns augmented data with batch_size enzymes'
+        'Returns augmented data with batch_size'
         input_size = 224
         output_size = 56
         # Initialization
@@ -75,31 +75,26 @@ class StreamingDataGenerator(keras.utils.Sequence):
         for img_idx in range(len(list_images_temp)):
             im = list_images_temp[img_idx]
             im = transform.resize( im , (input_size,input_size), preserve_range=True)
-            im = im / 255.0
+            gray_im = color.rgb2gray(im)
+            dataset[img_idx] = np.concatenate([gray_im[:,:,np.newaxis], gray_im[:,:,np.newaxis], gray_im[:,:,np.newaxis] ], axis = 2 )
+
+            
             #I'm needed the image in Lab color mode:
             if im.shape != (224,224,3):
                 continue
-            lab_im = color.rgb2lab(im)
-            y_lab_im = transform.resize( lab_im , (output_size,output_size), preserve_range=True)
+            rgb_im = transform.resize( im , (output_size,output_size), preserve_range=True)
+            lab_im = color.rgb2lab(rgb_im/255)
 
-            dataset[img_idx] = np.asarray(lab_im, dtype="float")
+            y_lab_im = lab_im
             y_dataset[img_idx] = np.asarray(y_lab_im, dtype="float")
-        
-        X = np.concatenate([dataset[:,:,:,0, np.newaxis], dataset[:,:,:,0, np.newaxis], dataset[:,:,:,0, np.newaxis] ], axis = 3)
 
-        #Normalize to 0...1 interval
-        X = X / 100.0
+        #if batch size is 1 then i want to display too.
+        if (self.batch_size == 1):
+            self.gray_img = dataset
+        X = dataset - np.mean(dataset)
         
-        onehot_encoder = OneHotEncoder(sparse = False, categories='auto')
+        onehot_encoder = OneHotEncoder(sparse = False)#, categories='auto')
         onehot_encoded = onehot_encoder.fit_transform(np.array(range(0,self.pts_in_hull.shape[0])).reshape(-1,1) )
 
-        #res = np.zeros((y_dataset.shape[0], y_dataset.shape[1], y_dataset.shape[2], self.pts_in_hull.shape[0]))
-
-        #for idx in np.arange(y_dataset.shape[0]):
-        #    for x in np.arange(y_dataset.shape[1]):
-        #        for y in np.arange(y_dataset.shape[2]):
-        #            res[idx,x,y] = create_onehot_vectors(node = y_dataset[idx,x,y,1:], nodes = self.pts_in_hull, onehot_list = onehot_encoded)
-        
-        res = np.apply_along_axis(create_onehot_vectors, axis = 3, arr = y_dataset[:,:,:,1:], nodes = self.pts_in_hull, onehot_list = onehot_encoded)
-        Y = res
+        Y = np.apply_along_axis(create_onehot_vectors, axis = 3, arr = y_dataset[:,:,:,1:], nodes = self.pts_in_hull, onehot_list = onehot_encoded)
         return X, Y

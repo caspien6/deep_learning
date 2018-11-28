@@ -1,20 +1,26 @@
 from keras.applications import VGG16
 from keras import models, regularizers
 from keras.layers import BatchNormalization, Conv2D, UpSampling2D
+from keras.models import Model
 
-def create_vgg_model(vgg_trainable_layer_count = 2, upsampling = 8):
+def create_vgg_model(vgg_trainable_layer_count = 2, upsampling = 2):
     #Load the VGG model
     image_size = 224
     vgg_conv = VGG16(weights='imagenet', include_top=False, input_shape=(image_size, image_size, 3))
-    # Freeze the layers except the last 4 layers
-    for layer in vgg_conv.layers[:-vgg_trainable_layer_count]:
-        layer.trainable = False
 
+    layer_name = 'block4_conv3'
+    intermediate_layer_model = Model(inputs=vgg_conv.input,
+                                     outputs=vgg_conv.get_layer(layer_name).output)
+    for layer in intermediate_layer_model.layers[:-vgg_trainable_layer_count-1]:
+        layer.trainable = False
+    for layer in intermediate_layer_model.layers:
+        print(layer.trainable)
+    intermediate_layer_model.summary()
     # Create the model
     model = models.Sequential()
 
     # Add the vgg convolutional base model
-    model.add(vgg_conv)
+    model.add(intermediate_layer_model)
 
     #conv8
     model.add(UpSampling2D(upsampling))
