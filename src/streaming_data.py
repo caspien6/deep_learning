@@ -37,10 +37,13 @@ class StreamingDataGenerator(keras.utils.Sequence):
         self.batch_size = batch_size        
         self.pts_in_hull = np.load(pt_in_hull_folder)
         self.image_list = []
+        self.image_datagen = keras.preprocessing.image.ImageDataGenerator(horizontal_flip=True, zca_whitening= True, zca_epsilon= 0.1)
+
         for filename in glob.glob(folder + '*.jpg'):
             with Image.open(filename) as test_image:
                 img= np.asarray(test_image)
                 img = img.astype(float)
+                img = self.image_datagen.random_transform(img, seed=21)
                 self.image_list.append(img)
             if just_test and len(self.image_list) > batch_size:
                 break
@@ -93,7 +96,7 @@ class StreamingDataGenerator(keras.utils.Sequence):
             self.gray_img = dataset
         X = dataset - np.mean(dataset)
         
-        onehot_encoder = OneHotEncoder(sparse = False)#, categories='auto')
+        onehot_encoder = OneHotEncoder(sparse = False, categories='auto')
         onehot_encoded = onehot_encoder.fit_transform(np.array(range(0,self.pts_in_hull.shape[0])).reshape(-1,1) )
 
         Y = np.apply_along_axis(create_onehot_vectors, axis = 3, arr = y_dataset[:,:,:,1:], nodes = self.pts_in_hull, onehot_list = onehot_encoded)

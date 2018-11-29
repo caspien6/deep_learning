@@ -46,7 +46,7 @@ image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/ima
 #label_names = ['City', 'Skyline', 'Cityscape', 'Boathouse', 'Landscape lighting', 'Town square', 'College town', 'Town']
 #collect_labels(data_hl, image_root_folder, label_names)
 
-img_streamer_train = StreamingDataGenerator(image_train_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=32, just_test = False)
+img_streamer_train = StreamingDataGenerator(image_train_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
 img_streamer_valid = StreamingDataGenerator(image_valid_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=32, just_test = False)
 img_streamer_test = StreamingDataGenerator(image_test_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=32, just_test = False)
 
