@@ -71,7 +71,7 @@ model.layers.pop()
 model.layers.pop()
 
 
-conv_out = Conv2D(3, (1, 1), padding='same')(model.layers[-1].output)
+conv_out = Conv2D(2, (1, 1), padding='same')(model.layers[-1].output)
 o = Activation('tanh', name='loss')(conv_out)
 
 model2 = Model(input=model.input, output=[o])
@@ -86,7 +86,7 @@ for layer in model2.layers[:-7]:
 
 
 model2.summary()
-patience=30
+patience=15
 early_stopping=EarlyStopping(monitor='loss',patience=patience, verbose=1)
 checkpointer=ModelCheckpoint(filepath='unet_weights.hdf5', monitor='loss', save_best_only=True, verbose=1)
 csv_logger = CSVLogger('unet_training.log', append=True)
@@ -100,7 +100,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 history = model2.fit_generator(generator=img_streamer_train,
                     validation_data=img_streamer_valid,
                     callbacks=[csv_logger,checkpointer, early_stopping],
-                    epochs=200,
+                    epochs=50,
                    	use_multiprocessing=False,
                     workers=1,
                     verbose=1,

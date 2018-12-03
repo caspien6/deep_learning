@@ -83,7 +83,7 @@ class StreamingUnet_DataGenerator(keras.utils.Sequence):
             scalers = {}
             for i in range(y_dataset.shape[3]):
                 scalers[i] = StandardScaler()
-                y_lab_im[:,:,i] = (y_lab_im[:,:,i] - np.min(y_lab_im[:,:,i])) / (np.max(y_lab_im[:,:,i]) - np.min(y_lab_im[:,:,i]))
+                y_lab_im[:,:,i] = ((y_lab_im[:,:,i] - np.min(y_lab_im[:,:,i])) / (np.max(y_lab_im[:,:,i]) - np.min(y_lab_im[:,:,i]))-0.5)*2
                 y_dataset[img_idx,:,:,i] = np.asarray(y_lab_im[:,:,i], dtype="float")
             
 
@@ -91,5 +91,5 @@ class StreamingUnet_DataGenerator(keras.utils.Sequence):
         if (self.batch_size == 1):
             self.gray_img = dataset
         X = dataset
-        Y = y_dataset
+        Y = y_dataset[:,:,:,1:]
         return X, Y
