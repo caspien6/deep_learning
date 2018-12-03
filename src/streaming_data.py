@@ -31,7 +31,8 @@ def create_onehot_vectors(node, nodes, onehot_list):
 class StreamingDataGenerator(keras.utils.Sequence):
     
     def __init__(self, folder, batch_size=32,
-                 pt_in_hull_folder = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\samples\\pts_in_hull.npy', just_test = False):
+                 pt_in_hull_folder = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\samples\\pts_in_hull.npy', just_test = False,
+                 random_trf = True):
         
         'Initialization'
         self.batch_size = batch_size        
@@ -43,7 +44,10 @@ class StreamingDataGenerator(keras.utils.Sequence):
             with Image.open(filename) as test_image:
                 img= np.asarray(test_image)
                 img = img.astype(float)
-                img = self.image_datagen.random_transform(img, seed=21)
+                
+                if random_trf:
+                    img = self.image_datagen.random_transform(img, seed=21)
+                
                 self.image_list.append(img)
             if just_test and len(self.image_list) > batch_size:
                 break
@@ -85,10 +89,11 @@ class StreamingDataGenerator(keras.utils.Sequence):
             #I'm needed the image in Lab color mode:
             if im.shape != (224,224,3):
                 continue
+
             rgb_im = transform.resize( im , (output_size,output_size), preserve_range=True)
             lab_im = color.rgb2lab(rgb_im/255)
 
-            y_lab_im = lab_im
+            y_lab_im = lab_im*1.5
             y_dataset[img_idx] = np.asarray(y_lab_im, dtype="float")
 
         #if batch size is 1 then i want to display too.

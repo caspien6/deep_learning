@@ -28,7 +28,7 @@ def create_vgg_model(vgg_trainable_layer_count = 1, upsampling = 4):
     model.add(Conv2D(512,3,padding = 'same', activation = 'relu'))
     model.add(Conv2D(313,3,padding = 'same', activation = 'relu'))
     model.add(Conv2D(313,3,padding = 'same', activation = 'relu'))
-    model.add(Conv2D(313,1,padding = 'same', activation = 'softmax'))   
+    model.add(Conv2D(313,1,padding = 'same', activation = 'softmax'))
     
     # Show a summary of the model. Check the number of trainable parameters
     model.summary()
