@@ -35,8 +35,8 @@ test_labl_path = '/userhome/student/kede/colorize/deep_learning/data/test_labels
 class_desc_path = '/userhome/student/kede/colorize/deep_learning/data/class_descriptions.csv'
 image_id_path = '/userhome/student/kede/colorize/deep_learning/data/image_ids_and_rotation.csv'
 
-image_train_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/train/'
-image_valid_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/valid/'
+image_train_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/train_human/'
+image_valid_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/valid_human/'
 image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/test/'
 
 #data_hl = data_collector.DataCollector()
@@ -44,16 +44,21 @@ image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/ima
 
 
 #label_names = ['City', 'Skyline', 'Cityscape', 'Boathouse', 'Landscape lighting', 'Town square', 'College town', 'Town']
-#collect_labels(data_hl, image_root_folder, label_names)
+#label_names = ['Amusement park', 'Park', 'Skatepark', 'Highway', 'Bus garage', 'Portrait photography',
+#'Portrait', 'Self-portrait', 'Crowd', 'Politician', 'Outdoor structure', 'Home door', 'Door']
+#label_names = ['Crowd', 'Human face', 'Human', 'Red hair', 'Human hair color','Child', 'Music artist', 'Facial expression']
+#collect_labels(data_hl, image_train_root_folder, label_names)
 
 img_streamer_train = StreamingDataGenerator(image_train_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
-img_streamer_valid = StreamingDataGenerator(image_valid_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=32, just_test = False)
-img_streamer_test = StreamingDataGenerator(image_test_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=32, just_test = False)
+img_streamer_valid = StreamingDataGenerator(image_valid_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
+img_streamer_test = StreamingDataGenerator(image_test_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
 
-model = nnetwork.create_vgg_model(2)
-model.compile('adam', loss = 'categorical_crossentropy', metrics=['accuracy', keras.metrics.categorical_accuracy])
+#model = nnetwork.create_vgg_model(1,8)
+#model.compile('adam', loss = 'categorical_crossentropy', metrics=['accuracy', keras.metrics.categorical_accuracy])
 
-patience=30
+model = keras.models.load_model('weights.hdf5')
+
+patience=40
 early_stopping=EarlyStopping(monitor='val_acc',patience=patience, verbose=1)
 checkpointer=ModelCheckpoint(filepath='weights.hdf5',monitor='val_acc', save_best_only=True, verbose=1)
 
@@ -63,9 +68,9 @@ history = model.fit_generator(generator=img_streamer_train,
                     validation_data=img_streamer_valid,
                     epochs=200,
                    callbacks=[csv_logger,checkpointer, early_stopping],
-                   use_multiprocessing=True,
-                    workers=1,
-                    max_queue_size = 6)
+                   use_multiprocessing=False,
+                    workers=6,
+                    max_queue_size = 12)
 
 
 

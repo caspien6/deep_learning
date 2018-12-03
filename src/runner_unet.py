@@ -1,3 +1,4 @@
+
 from unet_zf import ZF_UNET_224
 from keras.optimizers import Adam
 from keras.layers import Conv2D
@@ -36,11 +37,7 @@ import image_loader
 import nnetwork
 from utility_methods import collect_and_separate_labels, collect_labels,save_plots, save_plots_callback
 from streaming_data import StreamingDataGenerator
-import warnings
 
-warnings.filterwarnings("ignore", category=UserWarning)
-
-pts_hull_file = '/userhome/student/kede/colorize/deep_learning/data/pts_in_hull.npy'
 
 train_labl_path = '/userhome/student/kede/colorize/deep_learning/data/train_labels.csv'
 valid_labl_path = '/userhome/student/kede/colorize/deep_learning/data/valid_labels.csv'
@@ -48,7 +45,7 @@ test_labl_path = '/userhome/student/kede/colorize/deep_learning/data/test_labels
 class_desc_path = '/userhome/student/kede/colorize/deep_learning/data/class_descriptions.csv'
 image_id_path = '/userhome/student/kede/colorize/deep_learning/data/image_ids_and_rotation.csv'
 
-image_train_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/train/'
+image_train_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/train2/'
 image_valid_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/valid/'
 image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/test/'
 #data_hl = data_collector.DataCollector()
@@ -58,37 +55,37 @@ image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/ima
 #label_names = ['City', 'Skyline', 'Cityscape', 'Boathouse', 'Landscape lighting', 'Town square', 'College town', 'Town']
 #collect_labels(data_hl, image_root_folder, label_names)
 
-img_streamer_train = streaming_unet_data.StreamingUnet_DataGenerator(image_train_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=128, just_test = False)
-img_streamer_valid = streaming_unet_data.StreamingUnet_DataGenerator(image_valid_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=32, just_test = False)
-img_streamer_test = streaming_unet_data.StreamingUnet_DataGenerator(image_test_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=32, just_test = False)
+img_streamer_train = streaming_unet_data.StreamingUnet_DataGenerator(image_train_root_folder, batch_size=64, just_test = False)
+img_streamer_valid = streaming_unet_data.StreamingUnet_DataGenerator(image_valid_root_folder, batch_size=32, just_test = False)
+img_streamer_test = streaming_unet_data.StreamingUnet_DataGenerator(image_test_root_folder, batch_size=32, just_test = False)
 
 
 model = ZF_UNET_224(weights='generator')
 optim = Adam()
 model.compile(optimizer=optim, loss='mse', metrics=['accuracy'])
 
-model.summary()
+
 model.layers.pop()
 model.layers.pop()
 model.layers.pop()
 model.layers.pop()
-model.summary()
+
 
 conv_out = Conv2D(3, (1, 1), padding='same')(model.layers[-1].output)
 o = Activation('tanh', name='loss')(conv_out)
 
 model2 = Model(input=model.input, output=[o])
-model2.summary()
+
 
 model2.save('starting_unet.h5')
 model2 = load_model('starting_unet.h5')
-model2.summary()
+
 
 for layer in model2.layers[:-7]:
     layer.trainable = False
 
 
-
+model2.summary()
 patience=30
 early_stopping=EarlyStopping(monitor='loss',patience=patience, verbose=1)
 checkpointer=ModelCheckpoint(filepath='unet_weights.hdf5', monitor='loss', save_best_only=True, verbose=1)
@@ -105,9 +102,9 @@ history = model2.fit_generator(generator=img_streamer_train,
                     callbacks=[csv_logger,checkpointer, early_stopping],
                     epochs=200,
                    	use_multiprocessing=False,
-                    workers=4,
+                    workers=1,
                     verbose=1,
-                    max_queue_size = 6)
+                    max_queue_size = 4)
 
 
 
