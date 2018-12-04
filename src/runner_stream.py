@@ -21,6 +21,8 @@ import glob
 import data_collector
 import image_loader
 import nnetwork
+from nnetwork import weighted_categorical_crossentropy
+
 from utility_methods import collect_and_separate_labels, collect_labels,save_plots, save_plots_callback
 from streaming_data import StreamingDataGenerator
 import warnings
@@ -28,6 +30,7 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
 pts_hull_file = '/userhome/student/kede/colorize/deep_learning/data/pts_in_hull.npy'
+distribution_file= '/userhome/student/kede/colorize/deep_learning/data/prior_probs.npy'
 
 train_labl_path = '/userhome/student/kede/colorize/deep_learning/data/train_labels.csv'
 valid_labl_path = '/userhome/student/kede/colorize/deep_learning/data/valid_labels.csv'
@@ -53,16 +56,20 @@ img_streamer_train = StreamingDataGenerator(image_train_root_folder, pt_in_hull_
 img_streamer_valid = StreamingDataGenerator(image_valid_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
 img_streamer_test = StreamingDataGenerator(image_test_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
 
-#model = nnetwork.create_vgg_model(1,8)
-#model.compile('adam', loss = 'categorical_crossentropy', metrics=['accuracy', keras.metrics.categorical_accuracy])
+distrib = np.load(distribution_file)
 
-model = keras.models.load_model('weights.hdf5')
+model = nnetwork.create_vgg_model(1,4)
 
-patience=40
+los = weighted_categorical_crossentropy(distrib,lmb=0.5)
+model.compile('adam', loss = los, metrics=['accuracy', keras.metrics.categorical_accuracy])
+
+#model = keras.models.load_model('weights.hdf5')
+
+patience=50
 early_stopping=EarlyStopping(monitor='val_acc',patience=patience, verbose=1)
 checkpointer=ModelCheckpoint(filepath='weights.hdf5',monitor='val_acc', save_best_only=True, verbose=1)
 
-csv_logger = CSVLogger('training1.log', append=True)
+csv_logger = CSVLogger('training2.log', append=True)
 
 history = model.fit_generator(generator=img_streamer_train,
                     validation_data=img_streamer_valid,
