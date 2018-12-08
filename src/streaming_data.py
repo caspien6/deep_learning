@@ -19,6 +19,8 @@ import gc
 import keras
 
 def closest_node(node, nodes):
+    """Helper function to get the discretized a,b pairs.
+    """
     nodes = np.asarray(nodes)
     deltas = nodes - node
     dist_2 = np.einsum('ij,ij->i', deltas, deltas)
@@ -29,11 +31,22 @@ def create_onehot_vectors(node, nodes, onehot_list):
     return onehot_list[idx]
 
 class StreamingDataGenerator(keras.utils.Sequence):
-    
+    """Multithread version custom data loader and generator for CLVGG models
+    """
     def __init__(self, folder, batch_size=32,
                  pt_in_hull_folder = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\samples\\pts_in_hull.npy', just_test = False,
                  random_trf = True):
-        
+        """It is loading up the images from the folder.
+            #Arguments:
+                folder: A folder path which contains .jpg images.
+
+                batch_size: The size of the batches.
+
+                pt_in_hull_folder: A filepath which refers to the pts_in_hull.npy file. 
+                    It is containing 313 discretized a,b value pair.
+
+                random_trf: Do you want random transformation when data loads into memory?
+        """
         'Initialization'
         self.batch_size = batch_size        
         self.pts_in_hull = np.load(pt_in_hull_folder)
@@ -71,8 +84,11 @@ class StreamingDataGenerator(keras.utils.Sequence):
         return X, y
     
     def __data_augmentation(self, list_images_temp):
+        """Arguments: 
+            list_images_temp: List containing image indexes from self.image_list
+        """
+        'Returns data with batch_size'
         gc.collect()
-        'Returns augmented data with batch_size'
         input_size = 224
         output_size = 56
         # Initialization

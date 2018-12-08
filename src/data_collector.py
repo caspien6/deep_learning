@@ -15,9 +15,34 @@ test_annotation_csv = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\
 class_desc_csv = 'O:\\ProgrammingSoftwares\\anaconda_projects\\dp_nagyhazi\\data\\class-descriptions.csv'
 
 class DataCollector:
-    
+    """ Collect Google Open Api v4 images.
+    """
     
     def load_datas(self, image_id_url_csv, train_annotation_csv, validation_annotation_csv, test_annotation_csv, class_desc_csv):
+        """Loading into memory already downloaded .csv files.
+
+		Data collector requires 5 .csv files from Google open image v4 page 
+		(https://storage.googleapis.com/openimages/web/download.html). This files
+		contains label and url information about images.
+
+		
+		#Arguments
+			image_id_url_csv: filepath to the downloaded .csv-s.  
+				Complete Open Images section  Image IDs.
+			
+			train_annotation_csv: filepath to the downloaded .csv-s. 
+				Subset with Image-Level Labels the Human verified train label
+			
+			validation_annotation_csv: filepath to the downloaded .csv-s. 
+				Subset with Image-Level Labels the Human verified validation label
+			
+			test_annotation_csv: filepath to the downloaded .csv-s. 
+				Subset with Image-Level Labels the Human verified train labels
+			
+			class_desc_csv: filepath to the downloaded .csv-s. 
+				Subset with Image-Level Labels, metadata class names.
+        """
+
         self.image_id_url = pd.read_csv(image_id_url_csv,engine='python', sep = ',')
 
         self.image_train_labels = pd.read_csv(train_annotation_csv,engine='python', sep = ',')
@@ -29,6 +54,11 @@ class DataCollector:
         self.image_labels = pd.concat( [self.image_train_labels,self.image_validation_labels, self.image_test_labels] )
     
     def find_by_labelName(self,label_name):
+    	"""It finds the pictures wich labels equals with the argument label_name's ID.
+	    	#Argument:
+	    		label_name:
+	    			String type word which contained by class_description.
+    	"""
         label_id = self.class_description[self.class_description[1] == label_name][0]
         label_id = label_id.values[0]
         
@@ -39,14 +69,15 @@ class DataCollector:
         return self.result_label_df
         
     
-    '''Long running iteration!!
-    Iterate through row-by-row, download and save image. If the Http header Content-Type == image/png
-    then it won't download the image. This is because blank image comes with "Image no longer exists", HTTP status code 200.
-        Parameters: 
-            - image_urls: Pandas DataFrame cleaned url links, skip if url link is None.
-            - folder: The folder where do you want to download the images.
-    '''
+    
     def collect_small_images(self,image_urls,folder):
+        """Long running iteration!!
+			    Iterate through row-by-row, download and save image. If the Http header Content-Type == image/png
+			    then it won't download the image. This is because blank image comes with "Image no longer exists", HTTP status code 200.
+	       	#Arguments: 
+	            - image_urls: Pandas DataFrame cleaned url links, skip if url link is None.
+	            - folder: The folder where do you want to download the images.
+	    """
         for index, row in image_urls.iterrows():
 
             if not pd.notnull(row['Thumbnail300KURL']):

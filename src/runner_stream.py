@@ -42,6 +42,9 @@ image_train_root_folder = '/userhome/student/kede/colorize/deep_learning/data/im
 image_valid_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/valid_human/'
 image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/test/'
 
+
+#Data collection section-----
+
 #data_hl = data_collector.DataCollector()
 #data_hl.load_datas(image_id_path, train_labl_path, valid_labl_path, test_labl_path, class_desc_path)
 
@@ -52,10 +55,14 @@ image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/ima
 #label_names = ['Crowd', 'Human face', 'Human', 'Red hair', 'Human hair color','Child', 'Music artist', 'Facial expression']
 #collect_labels(data_hl, image_train_root_folder, label_names)
 
+#Data collection section-----ends here.
+
+#Loading every folders files into memory.
 img_streamer_train = StreamingDataGenerator(image_train_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
 img_streamer_valid = StreamingDataGenerator(image_valid_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
 img_streamer_test = StreamingDataGenerator(image_test_root_folder, pt_in_hull_folder = pts_hull_file, batch_size=64, just_test = False)
 
+#Loading empirical distribution of every pixels.
 distrib = np.load(distribution_file)
 
 model = nnetwork.create_vgg_model(1,4)

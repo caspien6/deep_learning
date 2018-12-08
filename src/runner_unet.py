@@ -48,6 +48,7 @@ image_id_path = '/userhome/student/kede/colorize/deep_learning/data/image_ids_an
 image_train_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/train2/'
 image_valid_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/valid/'
 image_test_root_folder = '/userhome/student/kede/colorize/deep_learning/data/images/test/'
+
 #data_hl = data_collector.DataCollector()
 #data_hl.load_datas(image_id_path, train_labl_path, valid_labl_path, test_labl_path, class_desc_path)
 

@@ -19,9 +19,21 @@ import gc
 import keras
 
 class StreamingUnet_DataGenerator(keras.utils.Sequence):
+    """Multithread version custom data loader and generator for Unet models
+    """
     
     def __init__(self, folder, batch_size=32, just_test = False, random_trf = False):
-        
+        """It is loading up the images from the folder.
+            #Arguments:
+                folder: A folder path which contains .jpg images.
+
+                batch_size: The size of the batches.
+
+                just_test: If you want to only test, 
+                then just one batch of images will be load into the memory.
+
+                random_trf: Do you want random transformation when data loads into memory?
+        """
         'Initialization'
         self.batch_size = batch_size        
         self.image_list = []
@@ -46,6 +58,7 @@ class StreamingUnet_DataGenerator(keras.utils.Sequence):
 
     def __getitem__(self, index):
         'Generate one batch of data'
+
         # Generate indexes of the batch
         indexes = [k for k in range(index*self.batch_size,(index+1)*self.batch_size,1)]
 
@@ -58,6 +71,9 @@ class StreamingUnet_DataGenerator(keras.utils.Sequence):
         return X, y
     
     def __data_augmentation(self, list_images_temp):
+        """Arguments: 
+            list_images_temp: List containing image indexes from self.image_list
+        """
         gc.collect()
         'Returns augmented data with batch_size'
         input_size = 224

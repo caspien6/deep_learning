@@ -9,11 +9,11 @@ def weighted_categorical_crossentropy(distributions, lmb=0.5):
     A weighted version of keras.objectives.categorical_crossentropy
     
     Variables:
-        weights: numpy array of shape (C,) where C is the number of classes
+        distributions: numpy array of shape (C,) where C is the number of color classes
     
     Usage:
-        weights = np.array([0.5,2,10]) # Class one at 0.5, class 2 twice the normal weights, class 3 10x.
-        loss = weighted_categorical_crossentropy(weights)
+        distributions = np.load('distributions.npy')
+        loss = weighted_categorical_crossentropy(distributions)
         model.compile(loss=loss,optimizer='adam')
     """
     lmb = K.variable(lmb)
@@ -50,6 +50,13 @@ def weighted_categorical_crossentropy(distributions, lmb=0.5):
 
 
 def create_vgg_model(vgg_trainable_layer_count = 1, upsampling = 4):
+    """Create the CLVGG arhcitecture.
+    
+        #Arguments:
+            vgg_trainable_layer_count: From the pretrained VGG16 keras model, how many layers do 
+                we want to train, it counts from behind.
+            upsampling: It decides the upsample ration after VGG16 and before input.
+    """
     #Load the VGG model
     image_size = 224
     vgg_conv = VGG16(weights='imagenet', include_top=False, input_shape=(image_size, image_size, 3))
