@@ -5,7 +5,6 @@
 *.hdf5
 *.h5
 *.pyc
-*.png
 data/images/
 data/training_images/
 data/class-descriptions.csv
