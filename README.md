@@ -1,6 +1,7 @@
 # Grayscaled pictures colorisation  
 
 Homework for the 2018 BME VIK Deep learning course.
+The documentation is in the docs/ folder.
 
 I choosed the IMG01 problem: Grayscaled image colorisation.
 There is a sample folder with all the files my program will use up, just these samples smaller than their original sizes.
