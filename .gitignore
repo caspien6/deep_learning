@@ -6,7 +6,14 @@
 *.h5
 *.pyc
 *.png
-data/
+data/images/
+data/training_images/
+data/class-descriptions.csv
+data/image_ids_and_rotation.csv
+data/train-annotations-human-imagelabels.csv
+data/validation-annotations-human-imagelabels.csv
+data/test-annotations-human-imagelabels.csv
+samples/recorded_imgs/
 src/augmented_images/
 src/.ipynb_checkpoints/
 tests/
