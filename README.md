@@ -1,6 +1,7 @@
 # Grayscaled pictures colorisation  
 
 Homework for the 2018 BME VIK Deep learning course.
+The documentation is in the docs/ folder.
 
 I choosed the IMG01 problem: Grayscaled image colorisation.
 There is a sample folder with all the files my program will use up, just these samples smaller than their original sizes.
@@ -54,6 +55,12 @@ There is a commented section of data collecting part from my training script: [r
 
 In the earier stage of the project i used a custom data loader class, there is a commented section how to use it in the [runner.py](https://github.com/caspien6/deep_learning/blob/master/src/runner.py)
 
+Dataset samples  
+Test pictures  
+![test](src/img_for_description/image_gallery.png)
+Legacy pictures
+![legacy](src/img_for_description/legacy_image_gallery.png)
+
 ### Training
 To train one of my model, you need to run the some of the scripts: [runner_stream.py](https://github.com/caspien6/deep_learning/blob/master/src/runner_stream.py), [runner_unet.py](https://github.com/caspien6/deep_learning/blob/master/src/runner_unet.py). 
 
@@ -91,8 +98,8 @@ If you want to visualize the colorization, there are notebooks where i implement
 The notebook is [Training.ipynb](https://github.com/caspien6/deep_learning/blob/master/src/Training.ipynb).  
 You can download the A model weights: [a_weights.hdf5](https://drive.google.com/open?id=13MPUkLqiGiKOdWPuh1g2Q3FbM9rJ_yw4)  
 You can download the B model weights: [b_weights.hdf5](https://drive.google.com/open?id=13MPUkLqiGiKOdWPuh1g2Q3FbM9rJ_yw4)  
-Here is a figure where you can set pretrained weights.
-![alt text]()
+Here is a figure from the notebook where you can set pretrained weights.  
+![alt text](src/img_for_description/visualize_results_clvgg.JPG)  
 In the figure above you need to setup 2 folder for displaying pictures:
 - test_weights: Path for the trained weights
 - root_pictures: Path where to save the created images.  
@@ -108,14 +115,60 @@ It is essential to comment out if you are using the b_weights!!!
 The notebook is [U-net architecture.ipynb](https://github.com/caspien6/deep_learning/blob/master/src/U-net%20architecture.ipynb).  
 Before setting weights you need to build up the model, like the figure did below.
 You also need the basic pretrained weights (zf_unet_224) to be able to build up the network. You can download the weights from [here](https://drive.google.com/drive/u/0/folders/13MPUkLqiGiKOdWPuh1g2Q3FbM9rJ_yw4).  
-After collecting the weights, build it up.
-![fig]()
-
+After collecting the weights, build it up.  
+![fig](src/img_for_description/unet_build_network.JPG)  
 After building up you can load up my trained weights (unet_weights), you can download those from [here](https://drive.google.com/drive/u/0/folders/13MPUkLqiGiKOdWPuh1g2Q3FbM9rJ_yw4)
-Here is a figure where you can set pretrained weights.
-![fig]()
-So you need to set the variable to the path of your weight, and a folder where your pictures will be saved.
+Here is a section from notebook where you can set pretrained weights.  
+![fig](src/img_for_description/visualize_results_unet.jpg)  
+The variables:
+- model_folder: path to the weights file
+- image_folder: path to the folder where you want to pictures  
+  
+## Results
+There are more picture in the src/img_for_description/ folder.
+### CLVGG model A
+#### Test pictures
+![a](src/img_for_description/clvgg_a/test_pics/test_img0.png)
+![a](src/img_for_description/clvgg_a/test_pics/test_img2.png)
+![a](src/img_for_description/clvgg_a/test_pics/test_img3.png)
+![a](src/img_for_description/clvgg_a/test_pics/test_img6.png)
 
+#### Legacy pictures
+![a](src/img_for_description/clvgg_a/legacy/test_img0.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img1.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img2.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img4.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img6.png)
 
+### CLVGG model B
+#### Test pictures
+![a](src/img_for_description/clvgg_b/test_pics/test_img0.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img1.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img2.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img3.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img4.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img6.png)
 
+#### Legacy pictures
+![a](src/img_for_description/clvgg_b/legacy/test_img0.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img1.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img2.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img3.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img4.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img5.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img6.png)
 
+### Unet model
+#### Test pictures
+![a](src/img_for_description/unet/test_pics/test_img0.png)
+![a](src/img_for_description/unet/test_pics/test_img1.png)
+
+#### Legacy pictures
+![a](src/img_for_description/unet/legacy/test_img0.png)
+![a](src/img_for_description/unet/legacy/test_img1.png)
+
+## Worse pictures from CLVGG model a
+![a](src/img_for_description/clvgg_a/worse/test_pics/test_img0.png)
+![a](src/img_for_description/clvgg_a/worse/test_pics/test_img1.png)
+![a](src/img_for_description/clvgg_a/worse/legacy/test_img1.png)
+![a](src/img_for_description/clvgg_a/worse/legacy/test_img11.png)
