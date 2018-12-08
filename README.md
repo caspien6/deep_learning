@@ -57,9 +57,9 @@ In the earier stage of the project i used a custom data loader class, there is a
 
 Dataset samples  
 Test pictures  
-![test](src/img_for_description/image_gallery.png)
-Legacy pictures
-![legacy](src/img_for_description/legacy_image_gallery.png)
+![test](src/img_for_description/image_gallery.png)  
+Legacy pictures  
+![legacy](src/img_for_description/legacy_image_gallery.png)  
 
 ### Training
 To train one of my model, you need to run the some of the scripts: [runner_stream.py](https://github.com/caspien6/deep_learning/blob/master/src/runner_stream.py), [runner_unet.py](https://github.com/caspien6/deep_learning/blob/master/src/runner_unet.py). 
