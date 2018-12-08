@@ -54,6 +54,12 @@ There is a commented section of data collecting part from my training script: [r
 
 In the earier stage of the project i used a custom data loader class, there is a commented section how to use it in the [runner.py](https://github.com/caspien6/deep_learning/blob/master/src/runner.py)
 
+Dataset samples  
+Test pictures  
+![test](src/img_for_description/image_gallery.png)
+Legacy pictures
+![legacy](src/img_for_description/legacy_image_gallery.png)
+
 ### Training
 To train one of my model, you need to run the some of the scripts: [runner_stream.py](https://github.com/caspien6/deep_learning/blob/master/src/runner_stream.py), [runner_unet.py](https://github.com/caspien6/deep_learning/blob/master/src/runner_unet.py). 
 
@@ -118,3 +124,50 @@ The variables:
 - image_folder: path to the folder where you want to pictures  
   
 ## Results
+There are more picture in the src/img_for_description/ folder.
+### CLVGG model A
+#### Test pictures
+![a](src/img_for_description/clvgg_a/test_pics/test_img0.png)
+![a](src/img_for_description/clvgg_a/test_pics/test_img2.png)
+![a](src/img_for_description/clvgg_a/test_pics/test_img3.png)
+![a](src/img_for_description/clvgg_a/test_pics/test_img6.png)
+
+#### Legacy pictures
+![a](src/img_for_description/clvgg_a/legacy/test_img0.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img1.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img2.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img4.png)
+![a](src/img_for_description/clvgg_a/legacy/test_img6.png)
+
+### CLVGG model B
+#### Test pictures
+![a](src/img_for_description/clvgg_b/test_pics/test_img0.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img1.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img2.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img3.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img4.png)
+![a](src/img_for_description/clvgg_b/test_pics/test_img6.png)
+
+#### Legacy pictures
+![a](src/img_for_description/clvgg_b/legacy/test_img0.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img1.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img2.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img3.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img4.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img5.png)
+![a](src/img_for_description/clvgg_b/legacy/test_img6.png)
+
+### Unet model
+#### Test pictures
+![a](src/img_for_description/unet/test_pics/test_img0.png)
+![a](src/img_for_description/unet/test_pics/test_img1.png)
+
+#### Legacy pictures
+![a](src/img_for_description/unet/legacy/test_img0.png)
+![a](src/img_for_description/unet/legacy/test_img1.png)
+
+## Worse pictures from CLVGG model a
+![a](src/img_for_description/clvgg_a/worse/test_pics/test_img0.png)
+![a](src/img_for_description/clvgg_a/worse/test_pics/test_img1.png)
+![a](src/img_for_description/clvgg_a/worse/legacy/test_img1.png)
+![a](src/img_for_description/clvgg_a/worse/legacy/test_img11.png)
